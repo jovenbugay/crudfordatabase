@@ -1,0 +1,38 @@
+        private void listUsers()
+        {
+            lvUsers.Items.Clear();
+
+            string query = "SELECT * FROM tbl_users";
+
+            MySqlConnection databaseConnection = new MySqlConnection(connectionString);
+            MySqlCommand commandDatabase = new MySqlCommand(query, databaseConnection);
+            commandDatabase.CommandTimeout = 60;
+            MySqlDataReader reader;
+
+            try
+            {
+                databaseConnection.Open();
+                reader = commandDatabase.ExecuteReader();
+                // Success, now list 
+
+                // If there are available rows
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        User _tmpUser = new User { id = reader.GetInt32(0), name = reader.GetString(1), address = reader.GetString(2) };
+                        lvUsers.Items.Add(_tmpUser);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("No rows found.");
+                }
+
+                databaseConnection.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }

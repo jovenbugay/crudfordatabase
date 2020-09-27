@@ -1,0 +1,28 @@
+            string query = "INSERT INTO tbl_users(`name`, `address`) VALUES (@NAME, @ADDRESS)";
+            // Which could be translated manually to :
+            // INSERT INTO user(`id`, `first_name`, `last_name`, `address`) VALUES (NULL, 'Bruce', 'Wayne', 'Wayne Manor')
+
+            MySqlConnection databaseConnection = new MySqlConnection(connectionString);
+            MySqlCommand commandDatabase = new MySqlCommand(query, databaseConnection);
+            commandDatabase.Parameters.AddWithValue("@NAME", txtName.Text);
+            commandDatabase.Parameters.AddWithValue("@ADDRESS", txtAddrr.Text);
+            commandDatabase.CommandTimeout = 60;
+
+            try
+            {
+                databaseConnection.Open();
+                MySqlDataReader myReader = commandDatabase.ExecuteReader();
+
+                MessageBox.Show("User succesfully registered");
+
+                databaseConnection.Close();
+            }
+            catch (Exception ex)
+            {
+                // Show any error message.
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                listUsers();
+            }
